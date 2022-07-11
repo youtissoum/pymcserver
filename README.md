@@ -1,5 +1,5 @@
 # pymcserver
----------------
+
 Minecraft Python Server!
 
 This python project is trying to remake a minecraft server in python
