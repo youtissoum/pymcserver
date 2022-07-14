@@ -1,5 +1,4 @@
 from minecraft.networking.connection import ServerThread
-import threading
 
 thread = ServerThread(100)
 thread.start()

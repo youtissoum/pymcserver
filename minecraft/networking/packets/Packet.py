@@ -18,7 +18,10 @@ class Packet(object):
         packet_length = VarInt.read(packet)
         packet_length_length = VarInt.getLength(packet)
         value_to_return = None
-        if packet_length < len(packet):
+        print(packet_length)
+        print(len(packet))
+        if packet_length < len(packet)-2:
+            print("test")
             combined_packet = packet[packet_length+1:]
             packet = packet[:packet_length+1]
             value_to_return = combined_packet
@@ -30,6 +33,10 @@ class Packet(object):
             return
 
         packet = packet[packet_length_length+1:]
+
+        print(packet)
+
+        self.values = []
 
         for normalValue in self.definition:
             value = normalValue[1].read(packet)
@@ -59,5 +66,7 @@ class Packet(object):
             packet += value[0].write(value[1])
 
         packet = VarInt.write(len(packet)) + packet
+
+        print(f"sent {packet}")
 
         self.packet = packet

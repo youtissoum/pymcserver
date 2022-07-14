@@ -42,6 +42,24 @@ class Long(Type):
     def getLength(value: bytes):
         return 8
 
+class ByteArray(Type):
+    @staticmethod
+    def read(value: bytes):
+        array_length, array_length_length = VarInt.read_and_length(value)
+        return value[array_length_length:array_length_length+array_length]
+
+    @staticmethod
+    def write(value):
+        length = VarInt.write(len(value))
+
+        return length + value
+
+    @staticmethod
+    def getLength(value: bytes):
+        array_length, array_length_length = VarInt.read_and_length(value)
+
+        return array_length + array_length_length
+
 class String(Type):
     @staticmethod
     def read(value):
@@ -53,7 +71,10 @@ class String(Type):
         length_int = len(value)
         length_varint = VarInt.write(length_int)
 
-        return length_varint + value.encode('utf-8')
+        if length_int < 1:
+            return b'\x01\x00'
+        else:
+            return length_varint + value.encode('utf-8')
 
     @staticmethod
     def getLength(value):
